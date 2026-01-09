@@ -18,62 +18,62 @@ pyroscope:
     query-frontend:
       kind: Deployment
       replicaCount: 2
-      resources:
-        limits:
-          memory: 1Gi
-        requests:
-          memory: 256Mi
-          cpu: 100m
+#      resources:
+#        limits:
+#          memory: 1Gi
+#        requests:
+#          memory: 256Mi
+#          cpu: 100m
     query-scheduler:
       kind: Deployment
       replicaCount: 2
-      resources:
-        limits:
-          memory: 1Gi
-        requests:
-          memory: 256Mi
-          cpu: 100m
+#      resources:
+#        limits:
+#          memory: 1Gi
+#        requests:
+#          memory: 256Mi
+#          cpu: 100m
     distributor:
       kind: Deployment
       replicaCount: 2
-      resources:
-        limits:
-          memory: 1Gi
-        requests:
-          memory: 256Mi
-          cpu: 500m
+#      resources:
+#        limits:
+#          memory: 1Gi
+#        requests:
+#          memory: 256Mi
+#          cpu: 500m
     ingester:
       kind: StatefulSet
-      replicaCount: 3
+      replicaCount: 1
       terminationGracePeriodSeconds: 600
-      resources:
-        limits:
-          memory: 16Gi
+#      resources:
+#        limits:
+#          memory: 16Gi
 #        requests:
 #          memory: 8Gi
 #          cpu: 1
     compactor:
       kind: StatefulSet
-      replicaCount: 3
+      replicaCount: 1
       terminationGracePeriodSeconds: 1200
       persistence:
         enabled: false
-      resources:
-        limits:
-          memory: 16Gi
+#      resources:
+#        limits:
+#          memory: 16Gi
 #        requests:
 #          memory: 8Gi
 #          cpu: 1
     store-gateway:
       kind: StatefulSet
-      replicaCount: 3
+      replicaCount: 1
       persistence:
         # The store-gateway needs not need persistent storage, but we still run it as a StatefulSet
         # This is to avoid having blocks of data being
         enabled: false
-      resources:
-        limits:
-          memory: 16Gi
+#      resources:
+#        limits:
+#          memory: 16Gi
 #        requests:
 #          memory: 8Gi
 #          cpu: 1
@@ -87,20 +87,20 @@ pyroscope:
     tenant-settings:
       kind: Deployment
       replicaCount: 1
-      resources:
-        limits:
-          memory: 4Gi
-        requests:
-          memory: 16Mi
-          cpu: 0.1
+#      resources:
+#        limits:
+#          memory: 4Gi
+#        requests:
+#          memory: 16Mi
+#          cpu: 0.1
     ad-hoc-profiles:
       kind: Deployment
       replicaCount: 1
-      resources:
-        limits:
-          memory: 4Gi
-        requests:
-          memory: 16Mi
-          cpu: 0.1
+#      resources:
+#        limits:
+#          memory: 4Gi
+#        requests:
+#          memory: 16Mi
+#          cpu: 0.1
 minio:
   enabled: false
