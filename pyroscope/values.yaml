@@ -191,7 +191,7 @@ pyroscope:
         bucket_name: pyroscope
         access_key_id: 3ItWE9jHmhIqz2Bk2Ho4  
         secret_access_key: jLG8LAnawBZreKFRifPHHmBUjPmklZhDSk0Vl8BB
-        insecure: false
+        insecure: true
 
   # -- Allows to add tenant specific overrides to the default limit configuration.
   tenantOverrides:
