@@ -184,16 +184,15 @@ pyroscope:
   # -- Contains Pyroscope's configuration as a string.
   # @default -- The config depends on other values been set, details can be found in [`values.yaml`](./values.yaml)
   config: |
-    {{- if .Values.minio.enabled }}
     storage:
       backend: s3
       s3:
-        endpoint: "{{ include "pyroscope.fullname" . }}-minio:9000"
-        bucket_name: {{(index .Values.minio.buckets 0).name | quote }}
-        access_key_id: {{ .Values.minio.rootUser | quote }}
-        secret_access_key: {{ .Values.minio.rootPassword | quote }}
-        insecure: true
-    {{- end }}
+        tls_insecure_skip_verify: true
+        endpoint: "minio.minio.svc.cluster.local:443"
+        bucket_name: pyroscope
+        access_key_id: 3ItWE9jHmhIqz2Bk2Ho4  
+        secret_access_key: jLG8LAnawBZreKFRifPHHmBUjPmklZhDSk0Vl8BB
+        insecure: false
 
   # -- Allows to add tenant specific overrides to the default limit configuration.
   tenantOverrides:
