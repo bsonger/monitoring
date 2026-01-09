@@ -288,7 +288,6 @@ POD annotations
 {{- if .ctx.Values.useExternalConfig }}
 checksum/config: {{ .ctx.Values.externalConfigVersion }}
 {{- else -}}
-checksum/config: {{ include (print .ctx.Template.BasePath "/configmap-tempo.yaml") .ctx | sha256sum }}
 {{- end }}
 {{- with .ctx.Values.global.podAnnotations }}
 {{ toYaml . }}
