@@ -1868,7 +1868,7 @@ metaMonitoring:
   # ServiceMonitor configuration
   serviceMonitor:
     # -- If enabled, ServiceMonitor resources for Prometheus Operator are created
-    enabled: false
+    enabled: true
     # -- Alternative namespace for ServiceMonitor resources
     namespace: null
     # -- Namespace selector for ServiceMonitor resources
