@@ -1,21 +1,21 @@
 apiVersion: v2
 appVersion: 2.9.0
-#dependencies:
-#- alias: minio
-#  condition: minio.enabled
-#  name: minio
-#  repository: https://charts.min.io/
-#  version: 4.1.0
-#- alias: grafana-agent-operator
-#  condition: metaMonitoring.grafanaAgent.installOperator
-#  name: grafana-agent-operator
-#  repository: https://grafana.github.io/helm-charts
-#  version: 0.5.1
-#- alias: rollout_operator
-#  condition: rollout_operator.enabled
-#  name: rollout-operator
-#  repository: https://grafana.github.io/helm-charts
-#  version: 0.37.1
+dependencies:
+- alias: minio
+  condition: minio.enabled
+  name: minio
+  repository: https://charts.min.io/
+  version: 4.1.0
+- alias: grafana-agent-operator
+  condition: metaMonitoring.grafanaAgent.installOperator
+  name: grafana-agent-operator
+  repository: https://grafana.github.io/helm-charts
+  version: 0.5.1
+- alias: rollout_operator
+  condition: rollout_operator.enabled
+  name: rollout-operator
+  repository: https://grafana.github.io/helm-charts
+  version: 0.40.0
 description: Grafana Tempo in MicroService mode
 home: https://grafana.com/docs/tempo/latest/
 icon: https://raw.githubusercontent.com/grafana/tempo/master/docs/tempo/website/logo_and_name.png
@@ -38,4 +38,4 @@ name: tempo-distributed
 sources:
 - https://github.com/grafana/tempo
 type: application
-version: 1.56.0
+version: 1.60.0
