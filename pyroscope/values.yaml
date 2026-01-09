@@ -297,9 +297,9 @@ architecture:
         resources:
           limits:
             memory: 16Gi
-          requests:
-            memory: 8Gi
-            cpu: 1
+#          requests:
+#            memory: 8Gi
+#            cpu: 1
       store-gateway:
         kind: StatefulSet
         replicaCount: 3
