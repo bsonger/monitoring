@@ -68,7 +68,7 @@ tempo:
     # -- Docker image repository
     repository: grafana/tempo
     # -- Overrides the image tag whose default is the chart's appVersion
-    tag: null
+    tag: "v2.9.0"
     pullPolicy: IfNotPresent
   livenessProbe:
     httpGet:
@@ -926,7 +926,7 @@ querier:
 queryFrontend:
   query:
     # -- Required for grafana version <7.5 for compatibility with jaeger-ui. Doesn't work on ARM arch
-    enabled: false
+    enabled: true
     image:
       # -- The Docker registry for the tempo-query image. Overrides `tempo.image.registry`
       registry: null
@@ -1119,131 +1119,7 @@ queryFrontend:
     # -- Set the optional grpc service protocol. Ex: "grpc", "http2" or "https"
     grpc: null
 
-# Configuration for the federation-frontend
-# Can only be enabled if enterprise.enabled is true - requires license.
-enterpriseFederationFrontend:
-  # -- Specifies whether a federation-frontend should be deployed
-  enabled: false
-  # -- Number of replicas for the federation-frontend
-  replicas: 1
-  # -- Annotations for the federation-frontend Deployment
-  annotations: {}
-  # -- hostAliases to add
-  hostAliases: []
-  #  - ip: 1.2.3.4
-  #    hostnames:
-  #      - domain.tld
-  proxy_targets: []
-  #   - name: own-data-center
-  #     url: http://get/tempo
-  #   - name: grafana-cloud
-  #     url: https://tempo-us-central1.grafana.net/tempo
-  #     basic_auth:
-  #       username: <instance-id>
-  #       password: <token>
-  autoscaling:
-    # -- Enable autoscaling for the federation-frontend
-    enabled: false
-    # -- Minimum autoscaling replicas for the federation-frontend
-    minReplicas: 1
-    # -- Maximum autoscaling replicas for the federation-frontend
-    maxReplicas: 3
-    # -- Target CPU utilisation percentage for the federation-frontend
-    targetCPUUtilizationPercentage: 60
-    # -- Target memory utilisation percentage for the federation-frontend
-    targetMemoryUtilizationPercentage:
-  image:
-    # -- The Docker registry for the federation-frontend image. Overrides `tempo.image.registry`
-    registry: null
-    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
-    pullSecrets: []
-    # -- Docker image repository for the federation-frontend image. Overrides `tempo.image.repository`
-    repository: null
-    # -- Docker image tag for the federation-frontend image. Overrides `tempo.image.tag`
-    tag: null
-  service:
-    # -- Port of the federation-frontend service
-    port: 3200
-    # -- Annotations for enterpriseFederationFrontend service
-    annotations: {}
-    # -- Type of service for the enterpriseFederationFrontend
-    type: ClusterIP
-    # -- If type is LoadBalancer you can assign the IP to the LoadBalancer
-    loadBalancerIP: ""
-    # -- If type is LoadBalancer limit incoming traffic from IPs.
-    loadBalancerSourceRanges: []
-  # -- The name of the PriorityClass for federation-frontend pods
-  priorityClassName: null
-  # -- Labels for enterpriseFederationFrontend pods
-  podLabels: {}
-  # -- Annotations for federation-frontend pods
-  podAnnotations: {}
-  # -- Additional CLI args for the federation-frontend
-  extraArgs: []
-  # -- Environment variables to add to the federation-frontend pods
-  extraEnv: []
-  # -- Environment variables from secrets or configmaps to add to the federation-frontend pods
-  extraEnvFrom: []
-  # -- Resource requests and limits for the federation-frontend
-  resources: {}
-  # -- Grace period to allow the federation-frontend to shutdown before it is killed
-  terminationGracePeriodSeconds: 30
-  # -- topologySpread for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Defaults to allow skew no more then 1 node per AZ
-  topologySpreadConstraints: |
-    - maxSkew: 1
-      topologyKey: failure-domain.beta.kubernetes.io/zone
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "federation-frontend") | nindent 6 }}
-  # -- Affinity for federation-frontend pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Hard node and soft zone anti-affinity
-  affinity: |
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchLabels:
-              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "federation-frontend") | nindent 10 }}
-          topologyKey: kubernetes.io/hostname
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "federation-frontend") | nindent 12 }}
-            topologyKey: failure-domain.beta.kubernetes.io/zone
-  # -- Pod Disruption Budget maxUnavailable
-  maxUnavailable: 1
-  # -- Node selector for federation-frontend pods
-  nodeSelector: {}
-  # -- Tolerations for federation-frontend pods
-  tolerations: []
-  # -- Extra volumes for federation-frontend pods
-  extraVolumeMounts: []
-  # -- Extra volumes for federation-frontend deployment
-  extraVolumes: []
-
 multitenancyEnabled: false
-
-rollout_operator:
-# -- Enable rollout-operator. It must be enabled when using Zone Aware Replication.
-  enabled: false
-
-  podSecurityContext:
-    fsGroup: 10001
-    runAsGroup: 10001
-    runAsNonRoot: true
-    runAsUser: 10001
-    seccompProfile:
-      type: RuntimeDefault
-
-  # Set the container security context
-  securityContext:
-    readOnlyRootFilesystem: true
-    capabilities:
-      drop: [ALL]
-    allowPrivilegeEscalation: false
 
 traces:
   jaeger:
@@ -1992,33 +1868,6 @@ prometheusRule:
   #     - record: node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
   #       expr: sum(rate(container_cpu_usage_seconds_total[1m])) by (node, namespace, pod, container)
 
-minio:
-  enabled: false
-  mode: standalone
-  rootUser: grafana-tempo
-  rootPassword: supersecret
-  buckets:
-    # Default Tempo storage bucket.
-    - name: tempo-traces
-      policy: none
-      purge: false
-    # Bucket for traces storage if enterprise.enabled is true - requires license.
-    - name: enterprise-traces
-      policy: none
-      purge: false
-    # Admin client bucket if enterprise.enabled is true - requires license.
-    - name: enterprise-traces-admin
-      policy: none
-      purge: false
-  persistence:
-    size: 5Gi
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-  # Changed the mc config path to '/tmp' from '/etc' as '/etc' is only writable by root and OpenShift will not permit this.
-  configPathmc: '/tmp/minio/mc/'
-
 # Configuration for the gateway
 gateway:
   # -- Specifies whether the gateway should be enabled
@@ -2334,43 +2183,7 @@ gateway:
         {{- end }}
       }
 
-ingress:
-  # -- If you enable this, make sure to disable the gateway's ingress.
-  enabled: false
-  # ingressClassName: nginx
-  annotations: {}
-  paths:
-    distributor:
-      - path: /v1/traces
-        port: 4318
-      - path: /distributor/ring
-        # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
-        # pathType: Prefix
-      - path: /ingester/ring
-      - path: /metrics-generator/ring
-    ingester:
-      - path: /flush
-      - path: /shutdown
-    query-frontend:
-      - path: /api
-    compactor:
-      - path: /compactor/ring
-  hosts:
-    - tempo.example.com
 
-##############################################################################
-# The values in and after the `enterprise:` key configure the enterprise features
-enterprise:
-  # Enable enterprise features. License must be provided, nginx gateway is not installed, instead
-  # the enterprise gateway is used.
-  enabled: false
-
-  image:
-    # -- Grafana Enterprise Traces container image repository. Note: for Grafana Tempo use the value 'image.repository'
-    repository: grafana/enterprise-traces
-    # -- Grafana Enterprise Traces container image tag. Note: for Grafana Tempo use the value 'image.tag'
-    tag: v2.8.1
-    # Note: pullPolicy and optional pullSecrets are set in toplevel 'image' section, not here
 
 # In order to use Grafana Enterprise Traces features, you will need to provide the contents of your Grafana Enterprise Traces
 # license, either by providing the contents of the license.jwt, or the name Kubernetes Secret that contains your license.jwt.
@@ -2572,137 +2385,6 @@ adminApi:
 
 # Settings for the gateway service providing authentication and authorization via the admin_api.
 # Can only be enabled if enterprise.enabled is true - requires license.
-enterpriseGateway:
-  # -- If you want to use your own proxy URLs, set this to false.
-  useDefaultProxyURLs: true
-  # -- Proxy URLs defined in this object will be used if useDefaultProxyURLs is set to false.
-  proxy: {}
-  replicas: 1
-  # -- hostAliases to add
-  hostAliases: []
-  #  - ip: 1.2.3.4
-  #    hostnames:
-  #      - domain.tld
-
-  image:
-    # -- The Docker registry for the enterpriseGateway image. Overrides `tempo.image.registry`
-    registry: null
-    # -- Optional list of imagePullSecrets. Overrides `tempo.image.pullSecrets`
-    pullSecrets: []
-    # -- Docker image repository for the enterpriseGateway image. Overrides `tempo.image.repository`
-    repository: null
-    # -- Docker image tag for the enterpriseGateway image. Overrides `tempo.image.tag`
-    tag: null
-
-  annotations: {}
-  service:
-    # -- Port of the enterprise gateway service; if left undefined, the service will listen on the same port as the pod
-    port: null
-    # -- Type of the enterprise gateway service
-    type: ClusterIP
-    # -- ClusterIP of the enterprise gateway service
-    clusterIP: null
-    # -- Load balancer IP address if service type is LoadBalancer for enterprise gateway service
-    loadBalancerIP: null
-    # -- Annotations for the enterprise gateway service
-    annotations: {}
-    # -- Labels for enterprise gateway service
-    labels: {}
-
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 1
-
-  podLabels: {}
-  podAnnotations: {}
-
-  # Pod Disruption Budget
-  podDisruptionBudget: {}
-
-  nodeSelector: {}
-  # -- topologySpread for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Defaults to allow skew no more than 1 node per AZ
-  topologySpreadConstraints: |
-    - maxSkew: 1
-      topologyKey: topology.kubernetes.io/zone
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          {{- include "tempo.selectorLabels" (dict "ctx" . "component" "enterprise-gateway") | nindent 6 }}
-  # -- Affinity for enterprise-gateway pods. Passed through `tpl` and, thus, to be configured as string
-  # @default -- Soft node and soft zone anti-affinity
-  affinity: |
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "enterprise-gateway") | nindent 12 }}
-            topologyKey: kubernetes.io/hostname
-        - weight: 75
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                {{- include "tempo.selectorLabels" (dict "ctx" . "component" "enterprise-gateway") | nindent 12 }}
-            topologyKey: topology.kubernetes.io/zone
-
-  securityContext:
-    {}
-
-    # -- The SecurityContext for enterprise-gateway containers
-  containerSecurityContext:
-    readOnlyRootFilesystem: true
-
-  initContainers: []
-
-  extraArgs: {}
-
-  persistence:
-    subPath:
-
-  readinessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 45
-
-  resources:
-    requests:
-      cpu: 10m
-      memory: 32Mi
-
-  terminationGracePeriodSeconds: 60
-
-  tolerations: []
-  extraContainers: []
-  extraVolumes: []
-  extraVolumeMounts: []
-  env: []
-  extraEnvFrom: []
-
-  # Ingress configuration
-  ingress:
-    # -- Specifies whether an ingress for the enterprise-gateway should be created
-    enabled: false
-    # -- Ingress Class Name. MAY be required for Kubernetes versions >= 1.18
-    # ingressClassName: gateway
-    # -- Annotations for the enterprise-gateway ingress
-    annotations: {}
-    # -- Hosts configuration for the enterprise-gateway ingress
-    hosts:
-      - host: gateway.get.example.com
-        paths:
-          - path: /
-            # -- pathType (e.g. ImplementationSpecific, Prefix, .. etc.) might also be required by some Ingress Controllers
-            # pathType: Prefix
-    # -- TLS configuration for the enterprise-gateway ingress
-    tls:
-      - secretName: get-gateway-tls
-        hosts:
-          - gateway.get.example.com
 
 # -- extraObjects could be utilized to add dynamic manifests via values
 extraObjects: []
