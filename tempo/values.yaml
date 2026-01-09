@@ -363,7 +363,7 @@ ingester:
 # Configuration for the metrics-generator
 metricsGenerator:
   # -- Specifies whether a metrics-generator should be deployed
-  enabled: false
+  enabled: true
   # -- Kind of deployment [StatefulSet/Deployment]
   kind: Deployment
   # -- Annotations for the metrics-generator StatefulSet
