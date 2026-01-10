@@ -12,9 +12,9 @@ pyroscope:
       resources:
         limits:
           memory: 1Gi
-        requests:
-          memory: 256Mi
-          cpu: 1
+#        requests:
+#          memory: 256Mi
+#          cpu: 1
     query-frontend:
       kind: Deployment
       replicaCount: 2
