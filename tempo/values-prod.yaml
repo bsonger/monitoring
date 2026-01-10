@@ -1,0 +1,12 @@
+storage:
+  admin:
+    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
+    backend: s3
+    # store traces in s3
+    s3:
+      tls_insecure_skip_verify: true
+      bucket: tempo                        # store traces in this bucket
+      endpoint: default-hl.minio.svc.cluster.local:9000  # api endpoint
+      access_key: Als13cgkzAkBZcxG0ZWC                                 # optional. access key when using static credentials.
+      secret_key: cQEYqadNi6u5WkLgUBm34mzNB0158ZLV6BPK040i                           # optional. secret key when using static credentials.
+      insecure: true
