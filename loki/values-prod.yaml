@@ -18,8 +18,8 @@ loki:
       admin: loki
     s3:
       endpoint: default-hl.minio.svc.cluster.local:9000
-      accessKeyId: pvQXQi2336byQykCF4kU
-      secretAccessKey: XzNej7wveQhjMx0qoI7S2UBkaEp7MYH36NQtCMZo
+      accessKeyId: Als13cgkzAkBZcxG0ZWC
+      secretAccessKey: cQEYqadNi6u5WkLgUBm34mzNB0158ZLV6BPK040i
       insecure: true
       s3forcepathstyle: true
 
