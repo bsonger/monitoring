@@ -14,3 +14,8 @@ storage:
 metricsGenerator:
   # -- Specifies whether a metrics-generator should be deployed
   affinity: {}
+  replicas: 1
+ingester:
+  affinity: {}
+distributor:
+  affinity: {}
