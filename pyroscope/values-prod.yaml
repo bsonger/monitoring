@@ -38,7 +38,7 @@ pyroscope:
 #          cpu: 500m
     segment-writer:
       kind: StatefulSet
-      replicaCount: 1
+      replicaCount: 3
       terminationGracePeriodSeconds: 600
 #      resources:
 #        limits:
@@ -60,7 +60,7 @@ pyroscope:
 #          cpu: 1
     metastore:
       kind: StatefulSet
-      replicaCount: 1
+      replicaCount: 3
       terminationGracePeriodSeconds: 1200
       persistence:
         enabled: false
