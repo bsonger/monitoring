@@ -17,3 +17,11 @@ ingester:
   affinity: {}
 distributor:
   affinity: {}
+compactor:
+  # -- Number of replicas for the compactor
+  replicas: 1
+  affinity: {}
+  config:
+    compaction:
+      # -- Duration to keep blocks
+      block_retention: 168h
