@@ -82,3 +82,5 @@ gateway:
 # Enable minio for storage
 minio:
   enabled: false
+lokiCanary:
+  enabled: false
