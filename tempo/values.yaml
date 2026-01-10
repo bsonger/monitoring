@@ -1768,10 +1768,10 @@ storage:
     s3:
       tls_insecure_skip_verify: true
       bucket: tempo                        # store traces in this bucket
-      endpoint: "minio.minio.svc.cluster.local:443"  # api endpoint
+      endpoint: "minio.minio.svc.cluster.local:9000"  # api endpoint
       access_key: 3ItWE9jHmhIqz2Bk2Ho4                                 # optional. access key when using static credentials.
       secret_key: jLG8LAnawBZreKFRifPHHmBUjPmklZhDSk0Vl8BB                                 # optional. secret key when using static credentials.
-      insecure: false                                 # optional. enable if endpoint is http
+      insecure: true                                 # optional. enable if endpoint is http
     #      backend: local
 #      local:
 #        path: /var/tempo/traces
