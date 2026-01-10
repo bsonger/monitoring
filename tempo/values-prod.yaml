@@ -10,3 +10,7 @@ storage:
       access_key: Als13cgkzAkBZcxG0ZWC                                 # optional. access key when using static credentials.
       secret_key: cQEYqadNi6u5WkLgUBm34mzNB0158ZLV6BPK040i                           # optional. secret key when using static credentials.
       insecure: true
+
+metricsGenerator:
+  # -- Specifies whether a metrics-generator should be deployed
+  affinity: {}
