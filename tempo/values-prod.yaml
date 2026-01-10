@@ -1,10 +1,6 @@
 storage:
   trace:
     backend: s3
-  admin:
-    # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
-    backend: s3
-    # store traces in s3
     s3:
       tls_insecure_skip_verify: true
       bucket: tempo                        # store traces in this bucket
