@@ -187,7 +187,7 @@ pyroscope:
     storage:
       backend: s3
       s3:
-        endpoint: "minio.minio.svc.cluster.local:9000"
+        endpoint: "default-hl.minio.svc.cluster.local:9000"
         bucket_name: pyroscope
         access_key_id: Als13cgkzAkBZcxG0ZWC  
         secret_access_key: cQEYqadNi6u5WkLgUBm34mzNB0158ZLV6BPK040i
