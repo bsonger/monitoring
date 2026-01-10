@@ -39,22 +39,22 @@ pyroscope:
     distributor:
       kind: Deployment
       replicaCount: 2
-#      resources:
+      resources:
 #        limits:
 #          memory: 1Gi
-#        requests:
-#          memory: 256Mi
-#          cpu: 500m
+        requests:
+          memory: 256Mi
+          cpu: 500m
     ingester:
       kind: StatefulSet
       replicaCount: 3
       terminationGracePeriodSeconds: 600
-#      resources:
+      resources:
 #        limits:
 #          memory: 16Gi
-#        requests:
-#          memory: 8Gi
-#          cpu: 1
+        requests:
+          memory: 1Gi
+          cpu: 0.5
     compactor:
       kind: StatefulSet
       replicaCount: 1
