@@ -1,4 +1,6 @@
 storage:
+  trace:
+    backend: s3
   admin:
     # -- The supported storage backends are gcs, s3 and azure, as specified in https://grafana.com/docs/enterprise-traces/latest/configure/reference/#admin_client_config
     backend: s3
