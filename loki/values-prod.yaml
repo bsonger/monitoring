@@ -83,4 +83,4 @@ gateway:
 minio:
   enabled: false
 lokiCanary:
-  enabled: false
+  enabled: true
