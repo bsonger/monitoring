@@ -9,12 +9,12 @@ pyroscope:
     store-gateway.sharding-ring.replication-factor: "1"
     log.level: debug
   components:
-    querier:
+    query-backend:
       kind: Deployment
       replicaCount: 1
-      resources:
-        limits:
-          memory: 1Gi
+#      resources:
+#        limits:
+#          memory: 1Gi
 #        requests:
 #          memory: 256Mi
 #          cpu: 1
@@ -27,7 +27,7 @@ pyroscope:
 #        requests:
 #          memory: 256Mi
 #          cpu: 100m
-    query-scheduler:
+    distributor:
       kind: Deployment
       replicaCount: 1
 #      resources:
@@ -35,27 +35,30 @@ pyroscope:
 #          memory: 1Gi
 #        requests:
 #          memory: 256Mi
-#          cpu: 100m
-    distributor:
-      kind: Deployment
-      replicaCount: 2
-      resources:
-#        limits:
-#          memory: 1Gi
-        requests:
-          memory: 256Mi
-          cpu: 500m
-    ingester:
+#          cpu: 500m
+    segment-writer:
       kind: StatefulSet
-      replicaCount: 3
+      replicaCount: 1
       terminationGracePeriodSeconds: 600
-      resources:
+#      resources:
 #        limits:
-#          memory: 16Gi
-        requests:
-          memory: 1Gi
-          cpu: 0.5
-    compactor:
+#          memory: 4Gi
+#        requests:
+#          memory: 2Gi
+#          cpu: 1
+    compaction-worker:
+      kind: StatefulSet
+      replicaCount: 1
+      terminationGracePeriodSeconds: 1200
+#      persistence:
+#        enabled: false
+#      resources:
+#        limits:
+#          memory: 2Gi
+#        requests:
+#          memory: 1Gi
+#          cpu: 1
+    metastore:
       kind: StatefulSet
       replicaCount: 1
       terminationGracePeriodSeconds: 1200
@@ -63,36 +66,25 @@ pyroscope:
         enabled: false
 #      resources:
 #        limits:
-#          memory: 16Gi
+#          memory: 2Gi
 #        requests:
-#          memory: 8Gi
+#          memory: 1Gi
 #          cpu: 1
-    store-gateway:
-      kind: StatefulSet
-      replicaCount: 3
-      persistence:
-        # The store-gateway needs not need persistent storage, but we still run it as a StatefulSet
-        # This is to avoid having blocks of data being
-        enabled: false
-#      resources:
-#        limits:
-#          memory: 16Gi
-#        requests:
-#          memory: 8Gi
-#          cpu: 1
-      readinessProbe:
-        # The store gateway can be configured to wait on startup for ring stability to be reached before it becomes
-        # ready. See the `store-gateway.sharding-ring.wait-stability-min-duration` server argument for more information.
-        #
-        # Depending on this flag and the number of tenants + blocks that need to be synced on startup, pods can take
-        # some time to become ready. This value can be used to ensure Kubernetes waits long enough and reduce errors.
-        initialDelaySeconds: 60
+      extraArgs:
+        # Expect 3 metastores
+        metastore.raft.bootstrap-expect-peers: 3
+        # TODO(kolesnikovae): Update defaults.
+        adaptive-placement.max-dataset-shards: 1024
+        adaptive-placement.unit-size-bytes: 131072
+        # enable cleanup of blocks beyond retention
+        metastore.index.cleanup-interval: 1m
+        metastore.snapshot-compact-on-restore: true
     tenant-settings:
       kind: Deployment
       replicaCount: 1
 #      resources:
 #        limits:
-#          memory: 4Gi
+#          memory: 256Mi
 #        requests:
 #          memory: 16Mi
 #          cpu: 0.1
@@ -101,7 +93,16 @@ pyroscope:
       replicaCount: 1
 #      resources:
 #        limits:
-#          memory: 4Gi
+#          memory: 256Mi
+#        requests:
+#          memory: 16Mi
+#          cpu: 0.1
+    admin:
+      kind: Deployment
+      replicaCount: 1
+#      resources:
+#        limits:
+#          memory: 256Mi
 #        requests:
 #          memory: 16Mi
 #          cpu: 0.1
