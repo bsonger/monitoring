@@ -20,11 +20,11 @@ rules:
     - services
     - endpoints
     - pods
+    - nodes/metrics
   verbs:
     - get
     - list
     - watch
-    - nodes
 - apiGroups:
     - extensions
   resources:
