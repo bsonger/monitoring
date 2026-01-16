@@ -10,9 +10,6 @@ alloy:
         }
       }
       
-      # -------------------------------
-      # argocd namespace
-      # -------------------------------
       discovery.kubernetes "argocd" {
         namespaces {
           names = ["argocd"]
@@ -20,11 +17,9 @@ alloy:
         role = "pod"
       }
       
-      # relabel argocd pod logs
       discovery.relabel "argocd_pod_logs" {
         targets = discovery.kubernetes.argocd.targets
       
-        # Pod/Namespace/Container/Node/App 标签
         rule {
           source_labels = ["__meta_kubernetes_namespace"]
           action        = "replace"
@@ -51,7 +46,6 @@ alloy:
           target_label  = "app"
         }
       
-        # job 标签示例
         rule {
           source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
           action        = "replace"
@@ -60,7 +54,6 @@ alloy:
           replacement   = "$1/$2"
         }
       
-        # 日志路径
         rule {
           source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
           action        = "replace"
@@ -69,7 +62,6 @@ alloy:
           replacement   = "/var/log/pods/*$1/$2.log"
         }
       
-        # container runtime
         rule {
           source_labels = ["__meta_kubernetes_pod_container_id"]
           action        = "replace"
@@ -84,9 +76,6 @@ alloy:
         forward_to = [loki.write.default.receiver]
       }
       
-      # -------------------------------
-      # applications namespace
-      # -------------------------------
       discovery.kubernetes "app" {
         namespaces {
           names = ["applications"]
@@ -94,7 +83,6 @@ alloy:
         role = "pod"
       }
       
-      # relabel app pod logs
       discovery.relabel "app_pod_logs" {
         targets = discovery.kubernetes.app.targets
       
@@ -151,9 +139,6 @@ alloy:
         forward_to = [loki.write.default.receiver]
       }
       
-      # -------------------------------
-      # Kubernetes events
-      # -------------------------------
       loki.source.kubernetes_events "appEvent" {
         namespaces = ["app"]
         forward_to = [loki.write.default.receiver]
