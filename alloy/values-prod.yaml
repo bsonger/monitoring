@@ -38,8 +38,7 @@ alloy:
           namespace      = "${pod.namespace}"
           node_name      = "${pod.nodeName}"
           container_name = "${container.name}"
-      
-          # 可选：业务标签
+
           service = "applications"
           env     = "prod"
         }
