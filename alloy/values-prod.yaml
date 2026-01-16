@@ -34,10 +34,10 @@ alloy:
         forward_to = [loki.write.default.receiver]
       
         label_template {
-          pod_name       = "{{pod.metadata.name}}"
-          namespace      = "{{pod.metadata.namespace}}"
-          node_name      = "{{pod.spec.nodeName}}"
-          container_name = "{{container.name}}"
+          pod_name       = "{{`{{pod.metadata.name}}`}}"
+          namespace      = "{{`{{pod.metadata.namespace}}`}}"
+          node_name      = "{{`{{pod.spec.nodeName}}`}}"
+          container_name = "{{`{{container.name}}`}}"
           service        = "applications"
           env            = "prod"
         }
