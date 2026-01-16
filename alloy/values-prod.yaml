@@ -33,14 +33,13 @@ alloy:
         targets    = discovery.kubernetes.app.targets
         forward_to = [loki.write.default.receiver]
       
-        labels {
-          pod_name       = "${pod.name}"
-          namespace      = "${pod.namespace}"
-          node_name      = "${pod.nodeName}"
-          container_name = "${container.name}"
-
-          service = "applications"
-          env     = "prod"
+        label_template {
+          pod_name       = "{{pod.metadata.name}}"
+          namespace      = "{{pod.metadata.namespace}}"
+          node_name      = "{{pod.spec.nodeName}}"
+          container_name = "{{container.name}}"
+          service        = "applications"
+          env            = "prod"
         }
       }
       
